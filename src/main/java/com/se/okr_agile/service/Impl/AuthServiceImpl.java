@@ -1,9 +1,7 @@
 package com.se.okr_agile.service.Impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.se.okr_agile.entity.Token;
 import com.se.okr_agile.entity.User;
-import com.se.okr_agile.mapper.TokenMapper;
 import com.se.okr_agile.mapper.UserMapper;
 import com.se.okr_agile.service.AuthService;
 import com.se.okr_agile.service.UserService;
@@ -21,32 +19,37 @@ public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements Au
 
     @Autowired
     private UserService userService;
-    @Autowired
-    private TokenMapper tokenMapper;
+
     @Autowired
     private JwtUtil jwtUtil;
+
     @Autowired
     private PasswordUtil passwordUtil;
 
     @Override
     @Transactional
     public void register(RegisterRequestVO registerRequestVO) {
+        String username = registerRequestVO.getUsername();
+        String email = registerRequestVO.getEmail();
+
         // 验证账号
-        if(isUsernameExists(registerRequestVO.getUsername())) {
-            throw new RuntimeException("账号已存在");
+        if(isUsernameExists(username)) {
+            throw new RuntimeException("用户名已存在");
         }
 
         // 验证邮箱
-        if(isEmailExists(registerRequestVO.getEmail())) {
+        if(isEmailExists(email)) {
             throw new RuntimeException("邮箱已存在");
         }
 
         // 创建插入对象
         User user = new User();
-        user.setUsername(registerRequestVO.getUsername());
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setRole("member");
         user.setPassword(passwordUtil.encode(registerRequestVO.getPassword()));
-        user.setEmail(registerRequestVO.getEmail());
 
+        // 插入
         this.save(user);
     }
 
@@ -62,32 +65,30 @@ public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements Au
                 .one();
 
         if (user == null) {
-            throw new RuntimeException("用户名或密码错误");
+            throw new RuntimeException("用户名错误");
         }
 
         // 校验密码
         if (!passwordUtil.matches(password, user.getPassword())) {
-            throw new RuntimeException("用户名或密码错误");
+            throw new RuntimeException("密码错误");
         }
 
         // 生成 token 并插入到数据库
-        String token = jwtUtil.generateToken(user.getId(), user.getUsername());
-        Token tokenInDb = new Token();
-        tokenInDb.setToken(token);
-        tokenMapper.insert(tokenInDb);
+        String jwt = jwtUtil.generateToken(user.getId(), user.getUsername());
 
         // 构建返回对象
         LoginVO loginVO = new LoginVO();
         loginVO.setUsername(username);
-        loginVO.setToken(token);
+        loginVO.setToken(jwt);
 
+        // 返回
         return loginVO;
     }
 
     @Override
     @Transactional
-    public void logout(String token) {
-        tokenMapper.deleteByToken(token);
+    public void logout() {
+
     }
 
     public boolean isUsernameExists(String username) {

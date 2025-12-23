@@ -8,6 +8,8 @@ import com.se.okr_agile.vo.RegisterRequestVO;
 
 public interface AuthService extends IService<User> {
     void register(RegisterRequestVO registerRequestVO);
+
     LoginVO login(LoginRequestVO loginRequestVO);
-    void logout(String token);
+
+    void logout();
 }

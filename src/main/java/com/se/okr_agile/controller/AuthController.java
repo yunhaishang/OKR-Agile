@@ -34,9 +34,9 @@ public class AuthController {
     }
 
     @PostMapping("/auth/logout")
-    public Result logout(@RequestBody String token) {
+    public Result logout() {
         try {
-            authService.logout(token);
+            authService.logout();
             return Result.success();
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());

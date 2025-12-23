@@ -5,11 +5,9 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class User {
+public class Team {
     private Long id;
-    private String username;
-    private String email;
-    private String role;
-    private String password;
+    private String name;
+    private String description;
     private LocalDateTime created_at;
 }
