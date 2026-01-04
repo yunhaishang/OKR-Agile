@@ -26,9 +26,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         userInfoVO.setUsername(user.getUsername());
         userInfoVO.setEmail(user.getEmail());
         userInfoVO.setRole(user.getRole());
-        userInfoVO.setCreated_at(user.getCreated_at());
+        userInfoVO.setCreate_time(user.getCreate_time());
         userInfoVO.setTeams(teamUserMapper.getTeamsByUserId(id));
 
         return userInfoVO;
+    }
+    
+    @Override
+    public java.util.List<com.se.okr_agile.entity.Team> getTeamsByUserId(Long userId) {
+        return teamUserMapper.getTeamsByUserId(userId);
     }
 }

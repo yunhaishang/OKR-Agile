@@ -38,11 +38,29 @@ public class TeamController {
         }
     }
 
-    @GetMapping("/teams/{teamId}")
-    public Result<Team> getTeamInfo(HttpServletRequest request) {
+    @GetMapping("/teams/current")
+    public Result<Team> getCurrentTeam(HttpServletRequest request) {
         try {
             Long userId = (Long) request.getAttribute("userId");
-            Team team = teamService.getById(userId);
+            // 这里应该获取用户当前所属的团队
+            // 由于当前实现可能不完整，先返回用户信息中的团队
+            List<Team> userTeams = teamService.getTeams(userId);
+            if (userTeams != null && !userTeams.isEmpty()) {
+                // 返回用户第一个团队作为当前团队
+                return Result.success(userTeams.get(0));
+            } else {
+                return Result.error("No team found for user");
+            }
+        } catch(RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+    
+    @GetMapping("/teams/{teamId}")
+    public Result<Team> getTeamById(@PathVariable Long teamId, HttpServletRequest request) {
+        try {
+            Long userId = (Long) request.getAttribute("userId");
+            Team team = teamService.getById(teamId);
             return Result.success(team);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());

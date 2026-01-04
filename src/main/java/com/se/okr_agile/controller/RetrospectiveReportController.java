@@ -10,15 +10,55 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
+@RequestMapping("/retrospectives")
 public class RetrospectiveReportController {
 
     @Autowired
     private RetrospectiveReportService retrospectiveReportService;
 
-    @PostMapping("/retrospectivereports")
-    public Result createRetrospectiveReport(@RequestBody CreateRetrospectiveReportRequestVO createRetrospectiveReportRequestVO, HttpServletRequest request) {
+    @GetMapping
+    public Result<List<RetrospectiveReport>> getRetrospectives(HttpServletRequest request) {
+        try {
+            Long userId = (Long) request.getAttribute("userId");
+            List<RetrospectiveReport> retrospectiveReportList = retrospectiveReportService.list();
+            return Result.success(retrospectiveReportList);
+        } catch(RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}")
+    public Result<RetrospectiveReport> getRetrospectiveById(@PathVariable Long id, HttpServletRequest request) {
+        try {
+            Long userId = (Long) request.getAttribute("userId");
+            RetrospectiveReport retrospectiveReport = retrospectiveReportService.getById(id);
+            return Result.success(retrospectiveReport);
+        } catch(RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+
+    @PostMapping("/generate")
+    public Result<RetrospectiveReport> generateRetrospective(@RequestBody Map<String, Object> requestBody, HttpServletRequest request) {
+        try {
+            Long userId = (Long) request.getAttribute("userId");
+            // 从requestBody获取period参数
+            String period = (String) requestBody.get("period");
+            
+            // 这里应该调用服务层方法生成报告
+            // 由于没有现成的服务方法，这里返回一个错误信息
+            return Result.error("Generate report method not implemented yet");
+        } catch(RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
+    
+    // 保留原有的CRUD方法，但使用新的路径
+    @PostMapping
+    public Result createRetrospective(@RequestBody CreateRetrospectiveReportRequestVO createRetrospectiveReportRequestVO, HttpServletRequest request) {
         try {
             Long userId = (Long) request.getAttribute("userId");
             RetrospectiveReport retrospectiveReport = new RetrospectiveReport();
@@ -36,30 +76,8 @@ public class RetrospectiveReportController {
         }
     }
 
-    @GetMapping("/retrospectivereports")
-    public Result<List<RetrospectiveReport>> getRetrospectiveReports(HttpServletRequest request) {
-        try {
-            Long userId = (Long) request.getAttribute("userId");
-            List<RetrospectiveReport> retrospectiveReportList = retrospectiveReportService.list();
-            return Result.success(retrospectiveReportList);
-        } catch(RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
-    }
-
-    @GetMapping("/retrospectivereports/{id}")
-    public Result<RetrospectiveReport> getRetrospectiveReportById(@PathVariable Long id, HttpServletRequest request) {
-        try {
-            Long userId = (Long) request.getAttribute("userId");
-            RetrospectiveReport retrospectiveReport = retrospectiveReportService.getById(id);
-            return Result.success(retrospectiveReport);
-        } catch(RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
-    }
-
-    @PutMapping("/retrospectivereports/{id}")
-    public Result updateRetrospectiveReport(@PathVariable Long id, @RequestBody UpdateRetrospectiveReportRequestVO updateRetrospectiveReportRequestVO, HttpServletRequest request) {
+    @PutMapping("/{id}")
+    public Result updateRetrospective(@PathVariable Long id, @RequestBody UpdateRetrospectiveReportRequestVO updateRetrospectiveReportRequestVO, HttpServletRequest request) {
         try {
             Long userId = (Long) request.getAttribute("userId");
             RetrospectiveReport retrospectiveReport = new RetrospectiveReport();
@@ -76,8 +94,8 @@ public class RetrospectiveReportController {
         }
     }
 
-    @DeleteMapping("/retrospectivereports/{id}")
-    public Result deleteRetrospectiveReport(@PathVariable Long id, HttpServletRequest request) {
+    @DeleteMapping("/{id}")
+    public Result deleteRetrospective(@PathVariable Long id, HttpServletRequest request) {
         try {
             Long userId = (Long) request.getAttribute("userId");
             retrospectiveReportService.removeById(id);

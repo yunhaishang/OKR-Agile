@@ -13,6 +13,9 @@ public class UserInfoVO {
     private String username;
     private String email;
     private String role;
-    private LocalDateTime created_at;
+    
+    @TableField("create_time")
+    private LocalDateTime create_time;
+    
     private List<Team> teams;
 }

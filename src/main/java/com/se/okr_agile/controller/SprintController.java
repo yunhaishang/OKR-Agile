@@ -28,9 +28,14 @@ public class SprintController {
     }
 
     @GetMapping("/sprints")
-    public Result<List<Sprint>> getSprintByTeamId(@RequestBody Long teamId) {
+    public Result<List<Sprint>> getSprints(@RequestParam(required = false) Long teamId) {
         try {
-            List<Sprint> sprintList = sprintService.getSprintByTeamId(teamId);
+            List<Sprint> sprintList;
+            if (teamId != null) {
+                sprintList = sprintService.getSprintByTeamId(teamId);
+            } else {
+                sprintList = sprintService.list();
+            }
             return Result.success(sprintList);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());

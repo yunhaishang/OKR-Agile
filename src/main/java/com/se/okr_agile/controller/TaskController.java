@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class TaskController {
@@ -40,10 +41,27 @@ public class TaskController {
     }
 
     @GetMapping("/tasks")
-    public Result<List<Task>> getTasks(HttpServletRequest request) {
+    public Result<List<Task>> getTasks(
+            @RequestParam(required = false) String status,
+            @RequestParam(required = false) Long krId,
+            @RequestParam(required = false) Long sprintId,
+            @RequestParam(required = false) String priority,
+            @RequestParam(required = false) String type,
+            HttpServletRequest request) {
         try {
             Long userId = (Long) request.getAttribute("userId");
-            List<Task> taskList = taskService.list();
+            
+            // 构建查询条件
+            com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<Task> queryWrapper = 
+                new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<>();
+            
+            if (status != null) queryWrapper.eq("status", status);
+            if (krId != null) queryWrapper.eq("kr_id", krId);
+            if (sprintId != null) queryWrapper.eq("sprint_id", sprintId);
+            if (priority != null) queryWrapper.eq("priority", priority);
+            if (type != null) queryWrapper.eq("type", type);
+            
+            List<Task> taskList = taskService.list(queryWrapper);
             return Result.success(taskList);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());
@@ -80,6 +98,33 @@ public class TaskController {
             return Result.error(e.getMessage());
         }
     }
+    
+    @PatchMapping("/tasks/{id}/status")
+    public Result<Task> updateTaskStatus(@PathVariable Long id, @RequestBody Map<String, Object> requestBody, HttpServletRequest request) {
+        try {
+            Long userId = (Long) request.getAttribute("userId");
+            String status = (String) requestBody.get("status");
+            
+            if (status == null) {
+                return Result.error("Status is required");
+            }
+            
+            Task task = taskService.getById(id);
+            if (task == null) {
+                return Result.error("Task not found");
+            }
+            
+            task.setStatus(status);
+            taskService.updateById(task);
+            
+            // 更新关联的KR和Objective进度
+            updateObjectiveProgress(task.getKr_id());
+            
+            return Result.success(task);
+        } catch(RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
 
     @DeleteMapping("/tasks/{id}")
     public Result deleteTask(@PathVariable Long id, HttpServletRequest request) {
@@ -90,5 +135,12 @@ public class TaskController {
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());
         }
+    }
+    
+    private void updateObjectiveProgress(Long krId) {
+        if (krId == null) return;
+        
+        // 这里需要注入KeyResultService和ObjectiveService来更新进度
+        // 实际实现中应该在Service层处理进度更新逻辑
     }
 }

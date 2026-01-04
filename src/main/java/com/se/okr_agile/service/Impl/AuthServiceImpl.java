@@ -78,8 +78,20 @@ public class AuthServiceImpl extends ServiceImpl<UserMapper, User> implements Au
 
         // 构建返回对象
         LoginVO loginVO = new LoginVO();
-        loginVO.setUsername(username);
         loginVO.setToken(jwt);
+        
+        // 设置用户信息
+        LoginVO.UserInfo userInfo = new LoginVO.UserInfo();
+        userInfo.setId(user.getId());
+        userInfo.setUsername(user.getUsername());
+        userInfo.setEmail(user.getEmail());
+        userInfo.setRole(user.getRole());
+        userInfo.setCreate_time(user.getCreate_time());
+        
+        // 获取用户团队信息
+        userInfo.setTeams(userService.getTeamsByUserId(user.getId()));
+        
+        loginVO.setUserInfo(userInfo);
 
         // 返回
         return loginVO;

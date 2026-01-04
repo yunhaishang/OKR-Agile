@@ -5,6 +5,7 @@ CREATE TABLE user (
                       username VARCHAR(50) NOT NULL UNIQUE,
                       email VARCHAR(100) NOT NULL UNIQUE,
                       password VARCHAR(255) NOT NULL,
+                      role VARCHAR(20) DEFAULT 'USER',
                       nickname VARCHAR(50),
                       avatar VARCHAR(500),
                       status TINYINT DEFAULT 1,
