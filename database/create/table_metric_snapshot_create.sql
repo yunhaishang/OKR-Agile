@@ -18,4 +18,4 @@ CREATE TABLE metric_snapshot (
     INDEX idx_snapshot_date (snapshot_date),
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE,
     FOREIGN KEY (sprint_id) REFERENCES sprint(id) ON DELETE SET NULL
-) COMMENT = '指标快照表';
+) COMMENT = '指标快照表' AUTO_INCREMENT = 1;

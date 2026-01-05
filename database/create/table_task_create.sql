@@ -24,4 +24,4 @@ CREATE TABLE task (
     FOREIGN KEY (sprint_id) REFERENCES sprint(id) ON DELETE SET NULL,
     FOREIGN KEY (kr_id) REFERENCES key_result(id) ON DELETE CASCADE,
     FOREIGN KEY (assignee_id) REFERENCES user(id) ON DELETE SET NULL
-) COMMENT = '任务表';
+) COMMENT = '任务表' AUTO_INCREMENT = 1;

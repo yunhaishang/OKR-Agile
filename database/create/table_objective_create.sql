@@ -14,4 +14,4 @@ CREATE TABLE objective (
     INDEX idx_sprint_id (sprint_id),
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE,
     FOREIGN KEY (sprint_id) REFERENCES sprint(id) ON DELETE SET NULL
-) COMMENT = '目标表（OKR中的Objective）';
+) COMMENT = '目标表（OKR中的Objective）' AUTO_INCREMENT = 1;

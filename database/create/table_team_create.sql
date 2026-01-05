@@ -8,4 +8,4 @@ CREATE TABLE team (
     description TEXT COMMENT '团队描述',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     INDEX idx_name (name)
-) COMMENT = '团队表';
+) COMMENT = '团队表' AUTO_INCREMENT = 1;

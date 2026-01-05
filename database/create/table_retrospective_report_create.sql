@@ -16,4 +16,4 @@ CREATE TABLE retrospective_report (
     INDEX idx_sprint_id (sprint_id),
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE,
     FOREIGN KEY (sprint_id) REFERENCES sprint(id) ON DELETE SET NULL
-) COMMENT = '复盘报告表';
+) COMMENT = '复盘报告表' AUTO_INCREMENT = 1;
