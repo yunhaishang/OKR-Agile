@@ -2,6 +2,8 @@ package com.se.okr_agile.controller;
 
 import com.se.okr_agile.common.Result;
 import com.se.okr_agile.entity.Task;
+import com.se.okr_agile.service.KeyResultService;
+import com.se.okr_agile.service.ObjectiveService;
 import com.se.okr_agile.service.TaskService;
 import com.se.okr_agile.vo.CreateTaskRequestVO;
 import com.se.okr_agile.vo.UpdateTaskRequestVO;
@@ -137,10 +139,39 @@ public class TaskController {
         }
     }
     
+    @Autowired
+    private KeyResultService keyResultService;
+    
+    @Autowired
+    private ObjectiveService objectiveService;
+    
     private void updateObjectiveProgress(Long krId) {
         if (krId == null) return;
         
-        // 这里需要注入KeyResultService和ObjectiveService来更新进度
-        // 实际实现中应该在Service层处理进度更新逻辑
+        // 获取KR信息
+        com.se.okr_agile.entity.KeyResult kr = keyResultService.getById(krId);
+        if (kr == null) return;
+        
+        // 获取与KR关联的Objective
+        Long objectiveId = kr.getObjective_id();
+        if (objectiveId == null) return;
+        
+        com.se.okr_agile.entity.Objective objective = objectiveService.getById(objectiveId);
+        if (objective == null) return;
+        
+        // 计算Objective的进度（基于关联任务的完成情况）
+        // 这里简化处理，实际实现中需要根据业务逻辑计算
+        java.util.List<com.se.okr_agile.entity.Task> tasks = taskService.list(
+            new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<com.se.okr_agile.entity.Task>()
+                .eq("kr_id", krId)
+        );
+        
+        if (!tasks.isEmpty()) {
+            long completedTasks = tasks.stream().filter(task -> "done".equals(task.getStatus())).count();
+            java.math.BigDecimal progress = new java.math.BigDecimal(completedTasks * 100.0 / tasks.size()).setScale(2, java.math.RoundingMode.HALF_UP);
+            
+            objective.setProgress(progress);
+            objectiveService.updateById(objective);
+        }
     }
 }

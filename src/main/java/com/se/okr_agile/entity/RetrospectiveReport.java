@@ -1,11 +1,13 @@
 package com.se.okr_agile.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
 public class RetrospectiveReport {
+    @TableId
     private Long id;
     private Long team_id;
     private Long sprint_id;

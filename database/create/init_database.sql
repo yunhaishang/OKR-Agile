@@ -24,5 +24,11 @@ SOURCE table_task_kr_create.sql;
 SOURCE table_metric_snapshot_create.sql;
 SOURCE table_retrospective_report_create.sql;
 
+-- 重置自增主键为1
+SOURCE reset_auto_increment.sql;
+
+-- 初始化测试数据
+SOURCE test_data.sql;
+
 -- 提示信息
 SELECT 'Database schema initialization completed successfully!' AS message;
