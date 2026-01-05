@@ -8,4 +8,6 @@ public interface UserService extends IService<User> {
     public UserInfoVO getUserInfo(Long id);
     
     java.util.List<com.se.okr_agile.entity.Team> getTeamsByUserId(Long userId);
+    
+    User getByUsername(String username);
 }

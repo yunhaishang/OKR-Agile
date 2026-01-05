@@ -18,6 +18,12 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")          // 拦截所有请求
                 .excludePathPatterns("/auth/register", // 排除注册,登录,swagger文档
                         "/auth/login",
-                        "/swagger-ui/**");
+                        "/auth/logout",
+                        "/",  // 首页
+                        "/index.html",  // 主页面
+                        "/static/**",   // 静态资源
+                        "/api-docs/**", // API文档
+                        "/swagger-ui/**",
+                        "/v3/api-docs/**");
     }
 }
