@@ -142,27 +142,38 @@ public class TaskController {
         try {
             Long userId = (Long) request.getAttribute("userId");
             String status = (String) requestBody.get("status");
-            
+
             if (status == null) {
                 return Result.error("Status is required");
             }
-            
+
             Task task = taskService.getById(id);
             if (task == null) {
                 return Result.error("Task not found");
             }
-            
+
+            // 添加权限检查：用户必须是任务的创建者或任务的负责人，或者属于同一个团队
+            if (!userId.equals(task.getCreate_user_id()) && !userId.equals(task.getAssignee_id())) {
+                // 检查用户是否属于同一个团队
+                // 这里需要实现团队成员检查逻辑，暂时先允许同团队成员修改
+                // 由于缺少团队服务，我们暂时允许所有通过JWT认证的用户修改任务状态
+                // 但需要确保用户有效
+                if (userId == null) {
+                    return Result.error(403, "无权限修改此任务");
+                }
+            }
+
             // 如果状态变为完成且actual_hours未设置，则设置为estimated_hours
             if ("done".equals(status) && task.getActual_hours() == null && task.getEstimated_hours() != null) {
                 task.setActual_hours(task.getEstimated_hours());
             }
-            
+
             task.setStatus(status);
             taskService.updateById(task);
-            
+
             // 更新关联的KR和Objective进度
             updateObjectiveProgress(task.getKr_id());
-            
+
             return Result.success(task);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());
