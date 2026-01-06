@@ -3,6 +3,7 @@ package com.se.okr_agile.vo;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class CreateObjectiveRequestVO {
@@ -14,4 +15,5 @@ public class CreateObjectiveRequestVO {
     private LocalDateTime cycleEnd;
     private Integer status;
     private Long createUserId;
+    private List<CreateKeyResultRequestVO> krs;
 }

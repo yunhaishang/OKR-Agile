@@ -7,6 +7,7 @@ import com.se.okr_agile.service.KeyResultService;
 import com.se.okr_agile.service.ObjectiveService;
 import com.se.okr_agile.service.TaskKrService;
 import com.se.okr_agile.service.TaskService;
+import com.se.okr_agile.vo.CreateKeyResultRequestVO;
 import com.se.okr_agile.vo.CreateObjectiveRequestVO;
 import com.se.okr_agile.vo.OKRVO;
 import com.se.okr_agile.vo.UpdateObjectiveRequestVO;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -82,12 +84,27 @@ public class OKRController {
         try {
             Long userId = request.getAttribute("userId") != null ?
                     Long.valueOf(request.getAttribute("userId").toString()) : null;
-            
+
             Objective objective = new Objective();
             BeanUtils.copyProperties(createObjectiveRequestVO, objective);
             // 设置创建者ID
             objective.setCreateUserId(userId);
             objectiveService.save(objective);
+
+            // 创建关联的Key Results
+            if (createObjectiveRequestVO.getKrs() != null) {
+                for (CreateKeyResultRequestVO krVO : createObjectiveRequestVO.getKrs()) {
+                    KeyResult keyResult = new KeyResult();
+                    BeanUtils.copyProperties(krVO, keyResult);
+                    keyResult.setObjective_id(objective.getId());
+                    keyResult.setCreate_user_id(userId);
+                    keyResult.setCreated_at(LocalDateTime.now());
+                    keyResult.setUpdated_at(LocalDateTime.now());
+                    keyResult.setProgress(BigDecimal.ZERO);
+                    keyResult.setCurrent_value(BigDecimal.ZERO);
+                    keyResultService.save(keyResult);
+                }
+            }
 
             OKRVO okrVO = convertToOKRVO(objective);
 
