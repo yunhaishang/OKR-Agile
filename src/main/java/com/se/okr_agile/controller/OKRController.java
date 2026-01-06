@@ -78,7 +78,8 @@ public class OKRController {
     @PostMapping
     public Result<OKRVO> createOKR(@RequestBody CreateObjectiveRequestVO createObjectiveRequestVO, HttpServletRequest request) {
         try {
-            Long userId = (Long) request.getAttribute("userId");
+            Long userId = request.getAttribute("userId") != null ?
+                    Long.valueOf(request.getAttribute("userId").toString()) : null;
             
             Objective objective = new Objective();
             BeanUtils.copyProperties(createObjectiveRequestVO, objective);
