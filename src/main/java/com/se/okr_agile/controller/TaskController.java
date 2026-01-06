@@ -2,8 +2,10 @@ package com.se.okr_agile.controller;
 
 import com.se.okr_agile.common.Result;
 import com.se.okr_agile.entity.Task;
+import com.se.okr_agile.entity.TaskKr;
 import com.se.okr_agile.service.KeyResultService;
 import com.se.okr_agile.service.ObjectiveService;
+import com.se.okr_agile.service.TaskKrService;
 import com.se.okr_agile.service.TaskService;
 import com.se.okr_agile.vo.CreateTaskRequestVO;
 import com.se.okr_agile.vo.UpdateTaskRequestVO;
@@ -20,10 +22,13 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
+    @Autowired
+    private TaskKrService taskKrService;
+
     @PostMapping("/tasks")
     public Result createTask(@RequestBody CreateTaskRequestVO createTaskRequestVO, HttpServletRequest request) {
         try {
-            Long userId = (Long) request.getAttribute("userId");
+            Long userId = Long.valueOf(request.getAttribute("userId").toString());
             Task task = new Task();
             task.setTeam_id(createTaskRequestVO.getTeam_id());
             task.setSprint_id(createTaskRequestVO.getSprint_id());
@@ -41,6 +46,17 @@ public class TaskController {
             task.setCode_contribution_score(createTaskRequestVO.getCode_contribution_score() != null ? java.math.BigDecimal.valueOf(createTaskRequestVO.getCode_contribution_score()) : null);
             task.setCreate_user_id(createTaskRequestVO.getCreate_user_id() != null ? createTaskRequestVO.getCreate_user_id() : userId);
             taskService.save(task);
+
+            // 如果提供了kr_id，创建TaskKr关联
+            if (createTaskRequestVO.getKr_id() != null) {
+                com.se.okr_agile.entity.TaskKr taskKr = new com.se.okr_agile.entity.TaskKr();
+                taskKr.setTask_id(task.getId());
+                taskKr.setKr_id(createTaskRequestVO.getKr_id());
+                // 使用默认权重1.0
+                taskKr.setWeight(java.math.BigDecimal.valueOf(1.0));
+                taskKrService.save(taskKr);
+            }
+
             return Result.success(task);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());

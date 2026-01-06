@@ -56,7 +56,16 @@ public class JwtInterceptor implements HandlerInterceptor {
             log.info("令牌解析成功，用户ID: {}", claims.get("userId"));
 
             // 5. 将用户信息存入请求
-            request.setAttribute("userId", claims.get("userId"));
+            Object userIdObj = claims.get("userId");
+            Long userId = null;
+            if (userIdObj instanceof Integer) {
+                userId = ((Integer) userIdObj).longValue();
+            } else if (userIdObj instanceof Long) {
+                userId = (Long) userIdObj;
+            } else if (userIdObj instanceof Number) {
+                userId = ((Number) userIdObj).longValue();
+            }
+            request.setAttribute("userId", userId);
             request.setAttribute("username", claims.get("username"));
 
         } catch (ExpiredJwtException e) {
