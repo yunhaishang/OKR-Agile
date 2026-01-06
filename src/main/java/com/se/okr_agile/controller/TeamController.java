@@ -3,6 +3,7 @@ package com.se.okr_agile.controller;
 import com.se.okr_agile.common.Result;
 import com.se.okr_agile.entity.Team;
 import com.se.okr_agile.service.TeamService;
+import com.se.okr_agile.service.UserService;
 import com.se.okr_agile.vo.CreateTeamRequestVO;
 import com.se.okr_agile.vo.UpdateTeamRequestVO;
 import com.se.okr_agile.vo.UserTeamInfo;
@@ -18,13 +19,15 @@ public class TeamController {
 
     @Autowired
     private TeamService teamService;
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/teams")
-    public Result createTeam(@RequestBody CreateTeamRequestVO createTeamRequestVO, HttpServletRequest request) {
+    public Result<Team> createTeam(@RequestBody CreateTeamRequestVO createTeamRequestVO, HttpServletRequest request) {
         try {
             String username = (String) request.getAttribute("username");
             teamService.createTeamByUsername(username, createTeamRequestVO);
-            return Result.success();
+            return Result.success(userService.getTeamsByUserId(userService.getByUsername(username).getId()).get(0));
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());
         }

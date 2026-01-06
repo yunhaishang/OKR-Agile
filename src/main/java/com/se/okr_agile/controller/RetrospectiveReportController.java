@@ -44,7 +44,6 @@ public class RetrospectiveReportController {
     @PostMapping("/generate/{teamId}")
     public Result<RetrospectiveReport> generateRetrospective(@PathVariable Long teamId, @RequestBody Map<String, Object> requestBody, HttpServletRequest request) {
         try {
-            Long userId = (Long) request.getAttribute("userId");
             
             // 从requestBody获取周期参数
             String cycleStart = (String) requestBody.get("cycleStart");
@@ -58,7 +57,7 @@ public class RetrospectiveReportController {
             report.setHighlights("团队在本周期内完成了大部分目标，协作效率有所提升");
             report.setBottlenecks("部分任务延期，需求变更频繁导致开发效率降低");
             report.setSuggestions("加强需求管理，优化任务分配机制");
-            report.setMetrics_json("{'completedTasks': 15, 'totalTasks': 18, 'completionRate': 83.3}");
+            report.setMetrics_json("{\"completedTasks\": 15, \"totalTasks\": 18, \"completionRate\": 83.3}");
             retrospectiveReportService.save(report);
             
             return Result.success(report);
