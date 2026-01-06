@@ -32,7 +32,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 匹配所有 API 路径
-                .allowedOriginPatterns("http://localhost:5173") // 允许的前端地址
+                .allowedOriginPatterns("http://localhost:3000") // 允许的前端地址
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
