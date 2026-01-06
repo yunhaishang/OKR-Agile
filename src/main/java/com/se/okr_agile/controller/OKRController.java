@@ -39,7 +39,8 @@ public class OKRController {
     @GetMapping
     public Result<List<OKRVO>> getOKRs(@RequestParam(required = false) Long teamId, HttpServletRequest request) {
         try {
-            Long userId = (Long) request.getAttribute("userId");
+              Long userId = request.getAttribute("userId") != null ?
+                    Long.valueOf(request.getAttribute("userId").toString()) : null;
             List<Objective> objectives;
 
             if (teamId != null) {
@@ -61,7 +62,8 @@ public class OKRController {
     @GetMapping("/{id}")
     public Result<OKRVO> getOKRById(@PathVariable Long id, HttpServletRequest request) {
         try {
-            Long userId = (Long) request.getAttribute("userId");
+              Long userId = request.getAttribute("userId") != null ?
+                    Long.valueOf(request.getAttribute("userId").toString()) : null;
             Objective objective = objectiveService.getById(id);
             if (objective == null) {
                 return Result.error("Objective not found");
@@ -78,10 +80,13 @@ public class OKRController {
     @PostMapping
     public Result<OKRVO> createOKR(@RequestBody CreateObjectiveRequestVO createObjectiveRequestVO, HttpServletRequest request) {
         try {
-            Long userId = (Long) request.getAttribute("userId");
+            Long userId = request.getAttribute("userId") != null ?
+                    Long.valueOf(request.getAttribute("userId").toString()) : null;
             
             Objective objective = new Objective();
             BeanUtils.copyProperties(createObjectiveRequestVO, objective);
+            // 设置创建者ID
+            objective.setCreateUserId(userId);
             objectiveService.save(objective);
 
             OKRVO okrVO = convertToOKRVO(objective);
@@ -95,7 +100,8 @@ public class OKRController {
     @PutMapping("/{id}")
     public Result<OKRVO> updateOKR(@PathVariable Long id, @RequestBody UpdateObjectiveRequestVO updateObjectiveRequestVO, HttpServletRequest request) {
         try {
-            Long userId = (Long) request.getAttribute("userId");
+              Long userId = request.getAttribute("userId") != null ?
+                    Long.valueOf(request.getAttribute("userId").toString()) : null;
             
             Objective objective = objectiveService.getById(id);
             if (objective == null) {
@@ -116,7 +122,8 @@ public class OKRController {
     @DeleteMapping("/{id}")
     public Result deleteOKR(@PathVariable Long id, HttpServletRequest request) {
         try {
-            Long userId = (Long) request.getAttribute("userId");
+              Long userId = request.getAttribute("userId") != null ?
+                    Long.valueOf(request.getAttribute("userId").toString()) : null;
             
             objectiveService.removeById(id);
 

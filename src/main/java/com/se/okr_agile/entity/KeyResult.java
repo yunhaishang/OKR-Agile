@@ -19,5 +19,7 @@ public class KeyResult {
     private String display_unit;
     private BigDecimal weight;
     private BigDecimal progress;
+    private Long create_user_id;
     private LocalDateTime created_at;
+    private LocalDateTime updated_at;
 }

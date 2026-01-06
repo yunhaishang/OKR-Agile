@@ -19,5 +19,7 @@ public class MetricSnapshot {
     private Integer completed_tasks;
     private Integer blocked_tasks;
     private BigDecimal velocity;
+    private Long create_user_id;
     private java.time.LocalDateTime created_at;
+    private java.time.LocalDateTime updated_at;
 }

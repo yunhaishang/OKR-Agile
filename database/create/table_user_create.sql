@@ -11,4 +11,6 @@ CREATE TABLE user (
                       status TINYINT DEFAULT 1,
                       create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
                       update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-) AUTO_INCREMENT = 1;
+);
+
+ALTER TABLE user AUTO_INCREMENT = 1;

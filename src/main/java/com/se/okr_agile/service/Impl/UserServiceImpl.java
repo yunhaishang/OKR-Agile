@@ -1,5 +1,7 @@
 package com.se.okr_agile.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.se.okr_agile.entity.User;
 import com.se.okr_agile.mapper.TeamUserMapper;
@@ -35,5 +37,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public java.util.List<com.se.okr_agile.entity.Team> getTeamsByUserId(Long userId) {
         return teamUserMapper.getTeamsByUserId(userId);
+    }
+
+    @Override
+    public User getByUsername(String username) {
+        if (StringUtils.isBlank(username)) {
+            return null;
+        }
+
+        return this.getBaseMapper().selectOne(
+                new QueryWrapper<User>().lambda()
+                        .eq(User::getUsername, username)
+        );
     }
 }

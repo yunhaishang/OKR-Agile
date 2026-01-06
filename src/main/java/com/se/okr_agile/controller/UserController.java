@@ -80,4 +80,17 @@ public class UserController {
             return Result.error(e.getMessage());
         }
     }
+    
+    @GetMapping("/username/{username}")
+    public Result<User> getUserByUsername(@PathVariable String username) {
+        try {
+            User user = userService.getByUsername(username);
+            if (user == null) {
+                return Result.error("User not found");
+            }
+            return Result.success(user);
+        } catch(RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
+    }
 }

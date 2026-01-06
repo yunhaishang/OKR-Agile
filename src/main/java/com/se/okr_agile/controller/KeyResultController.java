@@ -26,10 +26,12 @@ public class KeyResultController {
             keyResult.setDescription(createKeyResultRequestVO.getDescription());
             keyResult.setMetric_type(createKeyResultRequestVO.getMetric_type());
             keyResult.setTarget_value(createKeyResultRequestVO.getTarget_value());
+            keyResult.setCurrent_value(createKeyResultRequestVO.getCurrent_value());
             keyResult.setDisplay_unit(createKeyResultRequestVO.getDisplay_unit());
             keyResult.setWeight(createKeyResultRequestVO.getWeight());
+            keyResult.setCreate_user_id(userId);
             keyResultService.save(keyResult);
-            return Result.success();
+            return Result.success(keyResult);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());
         }
@@ -61,15 +63,18 @@ public class KeyResultController {
     public Result updateKeyResult(@PathVariable Long id, @RequestBody UpdateKeyResultRequestVO updateKeyResultRequestVO, HttpServletRequest request) {
         try {
             Long userId = (Long) request.getAttribute("userId");
-            KeyResult keyResult = new KeyResult();
-            keyResult.setId(id);
+            KeyResult keyResult = keyResultService.getById(id);
+            if (keyResult == null) {
+                return Result.error("KeyResult not found");
+            }
             keyResult.setDescription(updateKeyResultRequestVO.getDescription());
             keyResult.setMetric_type(updateKeyResultRequestVO.getMetric_type());
             keyResult.setTarget_value(updateKeyResultRequestVO.getTarget_value());
+            if (updateKeyResultRequestVO.getCurrent_value() != null) keyResult.setCurrent_value(updateKeyResultRequestVO.getCurrent_value());
             keyResult.setDisplay_unit(updateKeyResultRequestVO.getDisplay_unit());
             keyResult.setWeight(updateKeyResultRequestVO.getWeight());
             keyResultService.updateById(keyResult);
-            return Result.success();
+            return Result.success(keyResult);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());
         }

@@ -12,5 +12,12 @@ public class Team {
     private Long id;
     private String name;
     private String description;
+    private Integer cycleDays;
+    private Integer status;
     private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private Integer memberCount;
+    private Integer okrCount;
+    private Integer taskCount;
+    private Integer completedTaskCount;
 }
