@@ -30,8 +30,9 @@ public class MetricSnapshotController {
             metricSnapshot.setCompleted_tasks(createMetricSnapshotRequestVO.getCompleted_tasks());
             metricSnapshot.setBlocked_tasks(createMetricSnapshotRequestVO.getBlocked_tasks());
             metricSnapshot.setVelocity(createMetricSnapshotRequestVO.getVelocity());
+            metricSnapshot.setCreate_user_id(userId);
             metricSnapshotService.save(metricSnapshot);
-            return Result.success();
+            return Result.success(metricSnapshot);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());
         }
@@ -63,8 +64,10 @@ public class MetricSnapshotController {
     public Result updateMetricSnapshot(@PathVariable Long id, @RequestBody UpdateMetricSnapshotRequestVO updateMetricSnapshotRequestVO, HttpServletRequest request) {
         try {
             Long userId = (Long) request.getAttribute("userId");
-            MetricSnapshot metricSnapshot = new MetricSnapshot();
-            metricSnapshot.setId(id);
+            MetricSnapshot metricSnapshot = metricSnapshotService.getById(id);
+            if (metricSnapshot == null) {
+                return Result.error("MetricSnapshot not found");
+            }
             metricSnapshot.setTeam_id(updateMetricSnapshotRequestVO.getTeam_id());
             metricSnapshot.setSprint_id(updateMetricSnapshotRequestVO.getSprint_id());
             metricSnapshot.setSnapshot_date(updateMetricSnapshotRequestVO.getSnapshot_date());
@@ -74,7 +77,7 @@ public class MetricSnapshotController {
             metricSnapshot.setBlocked_tasks(updateMetricSnapshotRequestVO.getBlocked_tasks());
             metricSnapshot.setVelocity(updateMetricSnapshotRequestVO.getVelocity());
             metricSnapshotService.updateById(metricSnapshot);
-            return Result.success();
+            return Result.success(metricSnapshot);
         } catch(RuntimeException e) {
             return Result.error(e.getMessage());
         }

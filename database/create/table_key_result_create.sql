@@ -12,7 +12,9 @@ CREATE TABLE key_result (
     display_unit VARCHAR(20) COMMENT '展示单位（%、次、个等）',
     weight DECIMAL(5,2) DEFAULT 1.00 COMMENT 'KR 权重',
     progress DECIMAL(5,2) DEFAULT 0.00 COMMENT 'KR 完成度（系统计算 / 评估结果）',
+    create_user_id BIGINT COMMENT '创建者ID',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     INDEX idx_objective_id (objective_id),
     FOREIGN KEY (objective_id) REFERENCES objective(id) ON DELETE CASCADE
 ) COMMENT = '关键结果表（OKR中的Key Result）' AUTO_INCREMENT = 1;
