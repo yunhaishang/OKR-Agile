@@ -1,5 +1,6 @@
 package com.se.okr_agile.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 @Data

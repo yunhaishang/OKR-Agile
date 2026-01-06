@@ -11,18 +11,20 @@ DROP TABLE IF EXISTS key_result;
 DROP TABLE IF EXISTS objective;
 DROP TABLE IF EXISTS sprint;
 DROP TABLE IF EXISTS team_user;
+DROP TABLE IF EXISTS team;
+DROP TABLE IF EXISTS user;
 
 -- 创建表结构（按依赖关系顺序）
-SOURCE table_user_create.sql;
-SOURCE table_team_create.sql;
-SOURCE table_team_user_create.sql;
-SOURCE table_sprint_create.sql;
-SOURCE table_objective_create.sql;
-SOURCE table_key_result_create.sql;
-SOURCE table_task_create.sql;
-SOURCE table_task_kr_create.sql;
-SOURCE table_metric_snapshot_create.sql;
-SOURCE table_retrospective_report_create.sql;
+SOURCE ./table_user_create.sql;
+SOURCE ./table_team_create.sql;
+SOURCE ./table_team_user_create.sql;
+SOURCE ./table_sprint_create.sql;
+SOURCE ./table_objective_create.sql;
+SOURCE ./table_key_result_create.sql;
+SOURCE ./table_task_create.sql;
+SOURCE ./table_task_kr_create.sql;
+SOURCE ./table_metric_snapshot_create.sql;
+SOURCE ./table_retrospective_report_create.sql;
 
 -- 重置自增主键为1
 SOURCE reset_auto_increment.sql;

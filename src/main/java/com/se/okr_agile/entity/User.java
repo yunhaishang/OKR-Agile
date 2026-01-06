@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 @TableName("user")
 public class User {
-    @TableId(type = IdType.AUTO)  // 明确指定使用数据库自增
+    @TableId(type = IdType.AUTO)
     private Long id;
     private String username;
     private String email;

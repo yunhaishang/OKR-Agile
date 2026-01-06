@@ -14,4 +14,4 @@ CREATE TABLE sprint (
     INDEX idx_name (name),
     INDEX idx_status (status),
     FOREIGN KEY (team_id) REFERENCES team(id) ON DELETE CASCADE
-) COMMENT = 'Sprint表（迭代周期）';
+) COMMENT = 'Sprint表（迭代周期）' AUTO_INCREMENT = 1;
