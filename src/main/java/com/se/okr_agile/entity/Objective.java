@@ -15,5 +15,9 @@ public class Objective {
     private String title;
     private String description;
     private BigDecimal progress;
+    private LocalDateTime cycleStart;
+    private LocalDateTime cycleEnd;
+    private Integer status;
+    private Long createUserId;
     private LocalDateTime created_at;
 }

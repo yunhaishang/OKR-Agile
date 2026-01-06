@@ -3,6 +3,7 @@ package com.se.okr_agile.entity;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -19,6 +20,11 @@ public class Task {
     private String type;
     private Integer story_points;
     private Long assignee_id;
+    private LocalDateTime due_date;
+    private Integer estimated_hours;
+    private Integer actual_hours;
+    private BigDecimal code_contribution_score;
+    private Long create_user_id;
     private LocalDateTime created_at;
     private LocalDateTime updated_at;
 }

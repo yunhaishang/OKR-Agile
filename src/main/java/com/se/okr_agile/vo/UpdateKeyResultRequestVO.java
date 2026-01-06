@@ -11,4 +11,5 @@ public class UpdateKeyResultRequestVO {
     private BigDecimal target_value;
     private String display_unit;
     private BigDecimal weight;
+    private BigDecimal current_value;
 }

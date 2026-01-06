@@ -14,4 +14,5 @@ public class Sprint {
     private LocalDateTime start_date;
     private LocalDateTime end_date;
     private String status;
+    private LocalDateTime created_at;
 }

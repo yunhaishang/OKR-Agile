@@ -82,6 +82,8 @@ public class OKRController {
             
             Objective objective = new Objective();
             BeanUtils.copyProperties(createObjectiveRequestVO, objective);
+            // 设置创建者ID
+            objective.setCreateUserId(userId);
             objectiveService.save(objective);
 
             OKRVO okrVO = convertToOKRVO(objective);

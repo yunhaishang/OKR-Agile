@@ -15,6 +15,9 @@ public class KanbanController {
 
     @Autowired
     private TaskService taskService;
+    
+    @Autowired
+    private com.se.okr_agile.service.KeyResultService keyResultService;
 
     @GetMapping("/data")
     public Result<Map<String, Object>> getKanbanData(
@@ -31,7 +34,15 @@ public class KanbanController {
             
             if (okrId != null) {
                 // 通过OKR ID查找相关的任务，需要通过KR关联
-                // 这里简化处理，实际实现中需要根据Objective->KeyResult->Task的关联关系查询
+                // 根据Objective->KeyResult->Task的关联关系查询
+                List<com.se.okr_agile.entity.KeyResult> keyResults = keyResultService.getByObjectiveId(okrId);
+                List<Long> krIds = keyResults.stream().map(com.se.okr_agile.entity.KeyResult::getId).collect(java.util.stream.Collectors.toList());
+                if (!krIds.isEmpty()) {
+                    queryWrapper.in("kr_id", krIds);
+                } else {
+                    // 如果没有找到关联的KR，返回空结果
+                    queryWrapper.eq("id", -1); // 一个不存在的ID
+                }
             }
             if (sprintId != null) queryWrapper.eq("sprint_id", sprintId);
             if (search != null) queryWrapper.like("title", search);
@@ -82,7 +93,16 @@ public class KanbanController {
                 new com.baomidou.mybatisplus.core.conditions.query.QueryWrapper<>();
             
             if (okrId != null) {
-                // 通过OKR ID查找相关的任务
+                // 通过OKR ID查找相关的任务，需要通过KR关联
+                // 根据Objective->KeyResult->Task的关联关系查询
+                List<com.se.okr_agile.entity.KeyResult> keyResults = keyResultService.getByObjectiveId(okrId);
+                List<Long> krIds = keyResults.stream().map(com.se.okr_agile.entity.KeyResult::getId).collect(java.util.stream.Collectors.toList());
+                if (!krIds.isEmpty()) {
+                    queryWrapper.in("kr_id", krIds);
+                } else {
+                    // 如果没有找到关联的KR，返回空结果
+                    queryWrapper.eq("id", -1); // 一个不存在的ID
+                }
             }
             if (sprintId != null) queryWrapper.eq("sprint_id", sprintId);
             
